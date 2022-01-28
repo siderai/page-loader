@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest 
     env:
-      CC_TEST_REPORTER_ID: ed3368785be593ed7ba2b0d57705ee88bca01b11b0426ccf5e61ed324f1abaef
+      CC_TEST_REPORTER_ID: 7445e8dc964f8e80bf8b4b29abaf00e6574afe426aa43afa50f77b6ea47b7c2d
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
