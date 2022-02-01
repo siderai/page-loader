@@ -7,7 +7,7 @@ package-install:
 	python3 -m pip install --user dist/*.whl
 
 lint:
-	poetry run flake8 gendiff
+	poetry run flake8
 
 test:
 	poetry run pytest
@@ -16,5 +16,4 @@ test-cov:
 	poetry run pytest --cov=loader --cov-report xml tests/
 
 show-cov:
-	poetry run pytest --cov=loader
-
+	poetry run pytest --cov=gendiff --cov-report term-missing
