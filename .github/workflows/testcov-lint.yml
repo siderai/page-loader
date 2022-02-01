@@ -1,0 +1,36 @@
+name: Gendiff CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    env:
+      CC_TEST_REPORTER_ID: 7445e8dc964f8e80bf8b4b29abaf00e6574afe426aa43afa50f77b6ea47b7c2d
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        make install
+    - name: Lint with flake8
+      run: |
+        make lint
+    - name: Test with pytest
+      run: |
+        make test
+    - name: Test coverage and send result to CodeClimate
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+        make test-cov
+        ./cc-test-reporter after-build
