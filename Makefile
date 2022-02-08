@@ -13,7 +13,7 @@ test:
 	poetry run pytest
 
 test-cov:
-	poetry run pytest --cov=loader --cov-report xml tests/
+	poetry run pytest --cov=page_loader --cov-report xml tests/
 
 show-cov:
-	poetry run pytest --cov=gendiff --cov-report term-missing
+	poetry run pytest --cov=page_loader --cov-report term-missing
