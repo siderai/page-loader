@@ -1,14 +1,6 @@
 import argparse
-import os
-
-import requests
 
 from core import download
-
-
-
-
-
 
 
 def main():
