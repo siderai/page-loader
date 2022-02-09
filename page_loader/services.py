@@ -21,11 +21,11 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
                 continue
         # unificate url
         if link.startswith('/'):
-            link == urlparse(url).netloc + link
+            link == urlparse(url).hostname + link
         logging.debug(f'Img link parsed: {link}')
 
         # download only from the same subdomain
-        if is_equal_netloc(url, link):
+        if is_equal_hostname(url, link):
             raw_img = requests.get(link, stream=True)
             if raw_img.status_code != 200:
                 logging.error('Could not connect to server, '
@@ -44,14 +44,14 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
 def gen_images_prefix(url: str) -> str:
     ''' From 'https://ru.hexlet.io/projects/' get name prefix
         like 'ru-hexlet-io' '''
-    netloc = urlparse(url).netloc
+    hostname = urlparse(url).hostname
     prefix = ''.join(
-        char if char.isalnum() else '-' for char in netloc)
+        char if char.isalnum() else '-' for char in hostname)
     return prefix
 
 
-def is_equal_netloc(main_url, item_url):
-    return urlparse(main_url).netloc == urlparse(item_url).netloc
+def is_equal_hostname(main_url, item_url):
+    return urlparse(main_url).hostname == urlparse(item_url).hostname
 
 
 def save_scripts(scripts: List[str], path_for_files: str, url):
@@ -65,10 +65,10 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
                 logging.error(f'Empty link in script href: {script}')
                 continue
         if link.startswith('/'):
-            link == urlparse(url).netloc + link
+            link == urlparse(url).hostname + link
         logging.debug(f'Script link parsed: {link}')
 
-        if is_equal_netloc(url, link):
+        if is_equal_hostname(url, link):
             js_response = requests.get(link)
             if js_response.status_code != 200:
                 logging.error(f'Could not download script from src: {link}')
@@ -89,12 +89,13 @@ def save_css(resources: List[str], path_for_files: str, url: str):
             link = resource.get('src')
             if not link:
                 logging.error(f'Empty link in resource src: {resource}')
+        # equalize relative and absolute url path
         if link.startswith('/'):
-            link == urlparse(url).netloc + link
+            link == urlparse(url).hostname + link
         logging.debug(f'Resource link parsed: {link}')
 
-        if is_equal_netloc(url, link) and link.endswith('.css'):
-            # equalize relative and absolute url path
+        if is_equal_hostname(url, link) and link.endswith('.css'):
+
             res = requests.get(link)
             if resource.status_code != 200:
                 logging.error('Could not download '
