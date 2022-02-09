@@ -11,23 +11,24 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
     ''' Save images to enable full offline access to page '''
     prefix = gen_images_prefix(url)
     for img in img_items:
+        # parse image url
         link = img.get('src')
         if not link:
             logging.debug(f'Empty link in img src: {img}')
         else:
             link = img.get('href')
             if not link:
-                logging.warning(f'Empty link in img href: {img}')
+                logging.error(f'Empty link in img href: {img}')
                 continue
+
         # download only from the same subdomain
         if is_equal_netloc(url, link):
-            print(link)
             # unificate url
             if link.startswith('/'):
                 link == urlparse(url).netloc + link
             raw_img = requests.get(link, stream=True)
             if raw_img.status_code != 200:
-                logging.warning('Could not connect to server, '
+                logging.error('Could not connect to server, '
                                 f'image url: {link}')
             img_name = prefix + parse_name(link, 'img')
             img_path = os.path.join(path_for_files, img_name)
@@ -35,7 +36,7 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
                 with open(img_path, "wb+") as f:
                     shutil.copyfileobj(raw_img.raw, f)
             except PermissionError():
-                logging.warning('Could not save img to file '
+                logging.error('Could not save img to file '
                                 'due to permission error')
 
 
@@ -54,19 +55,22 @@ def is_equal_netloc(main_url, item_url):
 
 def save_scripts(scripts: List[str], path_for_files: str, url):
     for script in scripts:
+
         link = script.get('src')
         if not link:
             logging.debug(f'Empty link in script src: {script}')
         else:
-            link = img.get('href')
+            link = script.get('href')
             if not link:
-                logging.warning(f'Empty link in script href: {script}')
+                logging.error(f'Empty link in script href: {script}')
                 continue
+
         if is_equal_netloc(url, link):
-            print(link)
+            if link.startswith('/'):
+                link == urlparse(url).netloc + link
             js_response = requests.get(link)
             if js_response.status_code != 200:
-                logging.warning(f'Could not download script from src: {link}')
+                logging.error(f'Could not download script from src: {link}')
             script_content = js_response.text
             script_name = parse_name(link, 'js')
             script_path = os.path.join(path_for_files, script_name)
@@ -76,22 +80,24 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
 
 def save_css(resources: List[str], path_for_files: str, url: str):
     for resource in resources:
+        # parse target url
         link = resource.get('href')
         if not link:
             logging.debug(f'Empty link in resource href: {resource}')
         else:
-            link = img.get('src')
+            link = resource.get('src')
             if not link:
-                logging.warning(f'Empty link in resource src: {resource}')
+                logging.error(f'Empty link in resource src: {resource}')
+
         if is_equal_netloc(url, link) and link.endswith('.css'):
-            print(link)
+            # equalize relative and absolute url path
             if link.startswith('/'):
                 link == urlparse(url).netloc + link
-            resource = requests.get(link)
+            res = requests.get(link)
             if resource.status_code != 200:
-                logging.warning('Could not download '
+                logging.error('Could not download '
                                 f'resource from href: {link}')
-            resource_content = resource.text
+            resource_content = res.text
             resource_name = parse_name(link, 'resource')
             resource_path = os.path.join(path_for_files, resource_name)
             with open(resource_path, "w+") as f:
