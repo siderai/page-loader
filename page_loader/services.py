@@ -19,12 +19,13 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
             if not link:
                 logging.error(f'Empty link in img href: {img}')
                 continue
+        # unificate url
+        if link.startswith('/'):
+            link == urlparse(url).netloc + link
         logging.debug(f'Img link parsed: {link}')
+
         # download only from the same subdomain
         if is_equal_netloc(url, link):
-            # unificate url
-            if link.startswith('/'):
-                link == urlparse(url).netloc + link
             raw_img = requests.get(link, stream=True)
             if raw_img.status_code != 200:
                 logging.error('Could not connect to server, '
@@ -63,11 +64,11 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
             if not link:
                 logging.error(f'Empty link in script href: {script}')
                 continue
+        if link.startswith('/'):
+            link == urlparse(url).netloc + link
         logging.debug(f'Script link parsed: {link}')
 
         if is_equal_netloc(url, link):
-            if link.startswith('/'):
-                link == urlparse(url).netloc + link
             js_response = requests.get(link)
             if js_response.status_code != 200:
                 logging.error(f'Could not download script from src: {link}')
@@ -88,12 +89,12 @@ def save_css(resources: List[str], path_for_files: str, url: str):
             link = resource.get('src')
             if not link:
                 logging.error(f'Empty link in resource src: {resource}')
+        if link.startswith('/'):
+            link == urlparse(url).netloc + link
         logging.debug(f'Resource link parsed: {link}')
 
         if is_equal_netloc(url, link) and link.endswith('.css'):
             # equalize relative and absolute url path
-            if link.startswith('/'):
-                link == urlparse(url).netloc + link
             res = requests.get(link)
             if resource.status_code != 200:
                 logging.error('Could not download '
