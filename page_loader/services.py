@@ -13,7 +13,12 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
     for img in img_items:
         link = img.get('src')
         if not link:
-            logging.debug(f'Empty link in image object: {img}')
+            logging.debug(f'Empty link in img src: {img}')
+        else:
+            link = img.get('href')
+            if not link:
+                logging.warning(f'Empty link in img href: {img}')
+                continue
         # download only from the same subdomain
         if is_equal_netloc(url, link):
             print(link)
@@ -50,6 +55,13 @@ def is_equal_netloc(main_url, item_url):
 def save_scripts(scripts: List[str], path_for_files: str, url):
     for script in scripts:
         link = script.get('src')
+        if not link:
+            logging.debug(f'Empty link in script src: {script}')
+        else:
+            link = img.get('href')
+            if not link:
+                logging.warning(f'Empty link in script href: {script}')
+                continue
         if is_equal_netloc(url, link):
             print(link)
             js_response = requests.get(link)
@@ -65,6 +77,12 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
 def save_css(resources: List[str], path_for_files: str, url: str):
     for resource in resources:
         link = resource.get('href')
+        if not link:
+            logging.debug(f'Empty link in resource href: {resource}')
+        else:
+            link = img.get('src')
+            if not link:
+                logging.warning(f'Empty link in resource src: {resource}')
         if is_equal_netloc(url, link) and link.endswith('.css'):
             print(link)
             if link.startswith('/'):

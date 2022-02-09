@@ -17,8 +17,11 @@ def download(url: str, content_path: str = '/home/downloads/') -> str:
     path = os.path.join(content_path, name)
     request = requests.get(url)
     if request.status_code != 200:
-        logging.error('Initial request failed')
+        logging.error('Initial request failed '
+                        f'with code: {request.status_code}')
         raise Exception('Initial connection failed!')
+    else:
+        logging.debug(f'Connection established: {url}')
     with open(path, 'w+') as html:
         html.write(request.text)
 
@@ -28,10 +31,12 @@ def download(url: str, content_path: str = '/home/downloads/') -> str:
     if not os.path.isdir(path_for_files):
         try:
             os.makedirs(path_for_files)
+            logging.debug(f'Created assets directory: {path_for_files}')
         except PermissionError('You have no rights to create '
                                'a directory with this path'):
             logging.error('Could not save to a local directory as '
                           'it does not exist and cannot be created')
+            return
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
