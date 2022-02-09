@@ -22,8 +22,8 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
         # unificate url
         if link.startswith('/'):
             link == urlparse(url).hostname + link
-        logging.debug(f'Img link parsed: {link}')
-
+            logging.debug(f'Img link parsed: {link}')
+        logging.debug(f'Resource full link parsed: {link}')
         # download only from the same subdomain
         if is_equal_hostname(url, link):
             raw_img = requests.get(link, stream=True)
@@ -66,8 +66,8 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
                 continue
         if link.startswith('/'):
             link == urlparse(url).hostname + link
-        logging.debug(f'Script link parsed: {link}')
-
+            logging.debug(f'Script link parsed: {link}')
+        logging.debug(f'Resource full link parsed: {link}')
         if is_equal_hostname(url, link):
             js_response = requests.get(link)
             if js_response.status_code != 200:
@@ -92,8 +92,8 @@ def save_css(resources: List[str], path_for_files: str, url: str):
         # equalize relative and absolute url path
         if link.startswith('/'):
             link == urlparse(url).hostname + link
-        logging.debug(f'Resource link parsed: {link}')
-
+            logging.debug(f'Resource link parsed: {link}')
+        logging.debug(f'Resource full link parsed: {link}')
         if is_equal_hostname(url, link) and link.endswith('.css'):
 
             res = requests.get(link)
