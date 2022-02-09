@@ -18,6 +18,7 @@ def download(url: str, content_path: str = '/home/downloads/') -> str:
     request = requests.get(url)
     if request.status_code != 200:
         logging.error('Initial request failed')
+        raise Exception('Initial connection failed!')
     with open(path, 'w+') as html:
         html.write(request.text)
 

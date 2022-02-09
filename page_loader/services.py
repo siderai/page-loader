@@ -119,9 +119,9 @@ def switch_ending(name: str, item_type: str) -> str:
     elif name.endswith('-png'):
         name = name[:-4] + '.png'
     # html and dir for it's contents
-    if item_type == 'html':
+    elif item_type == 'html':
         name += '.html'
-    if item_type == 'dir':
+    elif item_type == 'dir':
         name += '_files'
     else:
         logging.debug(f'Failed to format name ending: {name}')
