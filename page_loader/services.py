@@ -15,7 +15,6 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
         link = img.get('src')
         if not link:
             logging.debug(f'Empty link in img src: {img}')
-        else:
             link = img.get('href')
             if not link:
                 logging.error(f'Empty link in img href: {img}')
@@ -59,7 +58,6 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
         link = script.get('src')
         if not link:
             logging.debug(f'Empty link in script src: {script}')
-        else:
             link = script.get('href')
             if not link:
                 logging.error(f'Empty link in script href: {script}')
@@ -84,7 +82,6 @@ def save_css(resources: List[str], path_for_files: str, url: str):
         link = resource.get('href')
         if not link:
             logging.debug(f'Empty link in resource href: {resource}')
-        else:
             link = resource.get('src')
             if not link:
                 logging.error(f'Empty link in resource src: {resource}')
