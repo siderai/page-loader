@@ -19,7 +19,7 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
             if not link:
                 logging.error(f'Empty link in img href: {img}')
                 continue
-
+        logging.debug(f'Img link parsed: {link}')
         # download only from the same subdomain
         if is_equal_netloc(url, link):
             # unificate url
@@ -34,6 +34,7 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
             try:
                 with open(img_path, "wb+") as f:
                     shutil.copyfileobj(raw_img.raw, f)
+                logging.debug(f'Img saved: {img_path}')
             except PermissionError():
                 logging.error('Could not save img to file '
                                 'due to permission error')
@@ -62,6 +63,7 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
             if not link:
                 logging.error(f'Empty link in script href: {script}')
                 continue
+        logging.debug(f'Script link parsed: {link}')
 
         if is_equal_netloc(url, link):
             if link.startswith('/'):
@@ -74,6 +76,7 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
             script_path = os.path.join(path_for_files, script_name)
             with open(script_path, "w+") as f:
                 f.write(script_content)
+                logging.debug(f'Script saved: {script_path}')
 
 
 def save_css(resources: List[str], path_for_files: str, url: str):
@@ -85,6 +88,7 @@ def save_css(resources: List[str], path_for_files: str, url: str):
             link = resource.get('src')
             if not link:
                 logging.error(f'Empty link in resource src: {resource}')
+        logging.debug(f'Resource link parsed: {link}')
 
         if is_equal_netloc(url, link) and link.endswith('.css'):
             # equalize relative and absolute url path
@@ -99,6 +103,7 @@ def save_css(resources: List[str], path_for_files: str, url: str):
             resource_path = os.path.join(path_for_files, resource_name)
             with open(resource_path, "w+") as f:
                 f.write(resource_content)
+                logging.debug(f'Resource saved: {resource_path}')
 
 
 def parse_name(url: str, item_type: str):
