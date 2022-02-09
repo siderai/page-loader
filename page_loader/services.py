@@ -109,23 +109,21 @@ def format_url_to_name(link: str) -> str:
 def switch_ending(name: str, item_type: str) -> str:
     ''' Edit ending of parsed name according to format '''
     # text files
-    if item_type == 'script':
-        if name.endswith('-js'):
-            name = name[:-3] + '.js'
-    elif item_type == 'css':
-        if name.endswith('-css'):
-            name = name[:-4] + '.css'
+    if name.endswith('-js'):
+        name = name[:-3] + '.js'
+    elif name.endswith('-css'):
+        name = name[:-4] + '.css'
     # images
-    elif item_type == 'img':
-        if name.endswith('-jpg'):
-            name = name[:-4] + '.jpg'
-        elif name.endswith('-png'):
-            name = name[:-4] + '.png'
+    elif name.endswith('-jpg'):
+        name = name[:-4] + '.jpg'
+    elif name.endswith('-png'):
+        name = name[:-4] + '.png'
     # html and dir for it's contents
-    elif item_type == 'html':
+    if item_type == 'html':
         name += '.html'
-    elif item_type == 'dir':
+    if item_type == 'dir':
         name += '_files'
     else:
-        logging.debug(f'Failed to switch name ending: {name}')
+        logging.debug(f'Failed to format name ending: {name}')
+
     return name

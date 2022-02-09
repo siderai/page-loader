@@ -82,8 +82,8 @@ def test_parse_name(url, urla, default):
 def test_is_equal_netloc(hexlet):
     url_false = 'https://cd23.hexlet.io/courses'
     url_true = 'https://ru.hexlet.io/data'
-    assert urlparse(hexlet).netloc != urlparse(url_false).netloc
-    assert urlparse(hexlet).netloc == urlparse(url_true).netloc
+    assert is_equal_netloc(hexlet, url_false) is False
+    assert is_equal_netloc(hexlet, url_true)
 
 
 def test_save_images():
