@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 from page_loader.services import *
 
 
-
 logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
 
