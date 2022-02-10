@@ -1,7 +1,7 @@
 import os
 import shutil
 import logging
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 from typing import List
 
 import requests
@@ -21,10 +21,7 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
                 continue
         # unificate url
         if link.startswith('/'):
-            if urlparse(url).netloc:
-                link == urlparse(url).netloc + urlparse(url).path + link
-            else:
-                link == urlparse(url).path + link
+            link = urljoin(url, link)
             logging.debug(f'Img link parsed: {link}')
         logging.debug(f'Resource full link parsed: {link}')
         # download only from the same subdomain
@@ -68,7 +65,7 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
                 logging.error(f'Empty link in script href: {script}')
                 continue
         if link.startswith('/'):
-            link == urlparse(url).hostname + link
+            link = urljoin(url, link)
             logging.debug(f'Script link parsed: {link}')
         logging.debug(f'Resource full link parsed: {link}')
         if is_equal_hostname(url, link):
@@ -94,7 +91,7 @@ def save_css(resources: List[str], path_for_files: str, url: str):
                 logging.error(f'Empty link in resource src: {resource}')
         # equalize relative and absolute url path
         if link.startswith('/'):
-            link == urlparse(url).hostname + link
+            link = urljoin(url, link)
             logging.debug(f'Resource link parsed: {link}')
         logging.debug(f'Resource full link parsed: {link}')
         if is_equal_hostname(url, link) and link.endswith('.css'):
