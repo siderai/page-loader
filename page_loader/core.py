@@ -31,8 +31,6 @@ def download(url: str, content_path: str) -> str:
                                'a directory with this path'):
             logging.error('Could not save to a local directory as '
                           'it does not exist and cannot be created')
-    with open(path, 'w+') as html:
-        html.write(request.text)
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
