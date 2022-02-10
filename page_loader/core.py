@@ -49,7 +49,7 @@ def download(url: str, content_path: str) -> str:
     # save JS files
     scripts = soup.find_all('script')
     for script in scripts:
-        local_path_to_script = save_script(scripts, path_for_files, url)
+        local_path_to_script = save_script(script, path_for_files, url)
         if local_path_to_script:
             script['src'] = local_path_to_script
 
