@@ -11,10 +11,10 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
         then return img's path to be updated in resuling html '''
     prefix = gen_images_prefix(url)
     # parse image url
-    link = img.get('src')
+    link = img['src']
     if not link:
         logging.debug(f'Empty link in img src: {img}')
-        link = img.get('href')
+        link = img['href']
         if not link:
             logging.error(f'Empty link in img href: {img}')
             return
