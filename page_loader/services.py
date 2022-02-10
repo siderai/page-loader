@@ -2,7 +2,6 @@ import os
 import shutil
 import logging
 from urllib.parse import urlparse, urljoin
-from typing import List
 
 import requests
 
@@ -26,7 +25,7 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
         raw_img = requests.get(link, stream=True)
         if raw_img.status_code != 200:
             logging.error('Could not connect to server, '
-                        f'image url: {link}')
+                          f'image url: {link}')
         img_name = prefix + parse_name(link, 'img')
         img_path = os.path.join(path_for_files, img_name)
         with open(img_path, "wb+") as f:
@@ -36,7 +35,8 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
 
 
 def save_script(script: str, path_for_files: str, url) -> str:
-    ''' Parse link to local script, download the file and return its local path '''
+    ''' Parse link to local script, download
+        the file and return its local path '''
     link = script.get('src')
     if not link:
         logging.debug(f'Empty link in script src: {script}')
