@@ -20,8 +20,11 @@ def download(url: str, content_path: str) -> str:
         raise Exception('Initial connection failed!')
     else:
         logging.debug(f'Connection established: {url}')
+    name = parse_name(url, 'html')
+    path = os.path.join(content_path, name)
     with open(content_path, 'w+') as html:
         html.write(request.text)
+
     # prepare file system for saving page content (img, png, js, css)
     content_dir_name = parse_name(url, 'dir')
     path_for_files = os.path.join(content_path, content_dir_name)
@@ -58,8 +61,7 @@ def download(url: str, content_path: str) -> str:
             res['href'] = local_path_to_res
 
     # save page as html locally
-    name = parse_name(url, 'html')
-    path = os.path.join(content_path, name)
+
     with open(path, 'w+') as html:
         html.write(soup.prettify(formatter="html"))
 
