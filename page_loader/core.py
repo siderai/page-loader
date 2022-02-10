@@ -22,7 +22,7 @@ def download(url: str, content_path: str) -> str:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
     path = os.path.join(content_path, name)
-    with open(content_path, 'w+') as html:
+    with open(path, 'w+') as html:
         html.write(request.text)
 
     # prepare file system for saving page content (img, png, js, css)
