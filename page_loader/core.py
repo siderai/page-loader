@@ -11,7 +11,7 @@ logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
 
 
-def download_page(url: str, content_path: str) -> str:
+def download(url: str, content_path: str) -> str:
     # make initial request
     request = requests.get(url)
     if request.status_code != 200:

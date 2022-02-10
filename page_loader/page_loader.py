@@ -1,6 +1,6 @@
 import argparse
 
-from core import download_page
+from core import download
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
     parser.add_argument('-o', '--output', default='/home/downloads/',
                         help='set output folder')
     args = parser.parse_args()
-    print(download_page(args.url, content_path=args.output))
+    print(download(args.url, content_path=args.output))
 
 
 if __name__ == '__main__':
