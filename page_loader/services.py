@@ -59,7 +59,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
             return script_path
 
 
-def save_local_resource(resource: str, path_for_files: str, url: str) -> str:
+def save_resource(resource: str, path_for_files: str, url: str) -> str:
     ''' Parse link to css file, download the file and return its local path '''
     # parse target url
     link = resource.get('href')
