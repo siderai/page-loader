@@ -11,7 +11,7 @@ logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
 
 
-def download(url: str, content_path: str = '/home/downloads/') -> str:
+def download(url: str, content_path: str) -> str:
     # save page as html
     name = parse_name(url, 'html')
     path = os.path.join(content_path, name)

@@ -21,7 +21,10 @@ def save_images(img_items: List[str], path_for_files: str, url: str):
                 continue
         # unificate url
         if link.startswith('/'):
-            link == urlparse(url).hostname + link
+            if urlparse(url).netloc:
+                link == urlparse(url).netloc + urlparse(url).path + link
+            else:
+                link == urlparse(url).path + link
             logging.debug(f'Img link parsed: {link}')
         logging.debug(f'Resource full link parsed: {link}')
         # download only from the same subdomain
