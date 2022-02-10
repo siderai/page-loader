@@ -50,7 +50,7 @@ def download(url: str, content_path: str) -> str:
 
     # save CSS
     resources = soup.find_all('link')
-    save_css(resources, path_for_files, url)
+    save_local_resources(resources, path_for_files, url)
 
     # change url paths in html to local paths
 

@@ -80,7 +80,7 @@ def save_scripts(scripts: List[str], path_for_files: str, url):
                 logging.debug(f'Script saved: {script_path}')
 
 
-def save_css(resources: List[str], path_for_files: str, url: str):
+def save_local_resources(resources: List[str], path_for_files: str, url: str):
     for resource in resources:
         # parse target url
         link = resource.get('href')
@@ -94,14 +94,17 @@ def save_css(resources: List[str], path_for_files: str, url: str):
             link = urljoin(url, link)
             logging.debug(f'Resource link parsed: {link}')
         logging.debug(f'Resource full link parsed: {link}')
-        if is_equal_hostname(url, link) and link.endswith('.css'):
-
+        if is_equal_hostname(url, link):
             res = requests.get(link)
             if resource.status_code != 200:
                 logging.error('Could not download '
                                 f'resource from href: {link}')
             resource_content = res.text
-            resource_name = parse_name(link, 'resource')
+            if link.endswith('.css'):
+                item_type = 'css'
+            else:
+                item_type = 'html'
+            resource_name = parse_name(link, f'{item_type}')
             resource_path = os.path.join(path_for_files, resource_name)
             with open(resource_path, "w+") as f:
                 f.write(resource_content)
