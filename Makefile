@@ -10,7 +10,7 @@ lint:
 	poetry run flake8 --ignore=F405,F403
 
 test:
-	poetry run pytest -vv tests
+	poetry run pytest
 
 test-cov:
 	poetry run pytest --cov=page_loader --cov-report xml tests/
