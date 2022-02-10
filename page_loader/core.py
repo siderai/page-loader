@@ -42,27 +42,27 @@ def download(url: str, content_path: str) -> str:
     # save image from page, then replace its url by path of downloaded file
     img_items = soup.find_all('img')
     for img in img_items:
-        local_path_to_img = save_image(img, path_for_files, url)
+        local_path_to_img = save_image(img, content_dir_name, url)
         if local_path_to_img:
             img['src'] = local_path_to_img
 
     # save JS files
     scripts = soup.find_all('script')
     for script in scripts:
-        local_path_to_script = save_script(script, path_for_files, url)
+        local_path_to_script = save_script(script, content_dir_name, url)
         if local_path_to_script:
             script['src'] = local_path_to_script
 
     # save CSS
     resources = soup.find_all('link')
     for res in resources:
-        local_path_to_res = save_resource(res, path_for_files, url)
+        local_path_to_res = save_resource(res, content_dir_name, url)
         if local_path_to_res:
             res['href'] = local_path_to_res
 
     # save page as html locally
 
     with open(path, 'w+') as html:
-        html.write(soup.prettify(formatter="html"))
+        html.write(soup.prettify())
 
     return path

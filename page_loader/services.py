@@ -6,7 +6,7 @@ from urllib.parse import urlparse, urljoin
 import requests
 
 
-def save_image(img: str, path_for_files: str, url: str) -> str:
+def save_image(img: str, content_dir_name: str, url: str) -> str:
     ''' Save images to enable full offline access to page,
         then return img's path to be updated in resuling html '''
     prefix = gen_images_prefix(url)
@@ -27,14 +27,14 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
             logging.error('Could not connect to server, '
                           f'image url: {link}')
         img_name = prefix + parse_name(link, 'img')
-        img_path = os.path.join(path_for_files, img_name)
+        img_path = os.path.join(content_dir_name, img_name)
         with open(img_path, "wb+") as f:
             shutil.copyfileobj(raw_img.raw, f)
         logging.debug(f'Img saved: {img_path}')
         return img_path
 
 
-def save_script(script: str, path_for_files: str, url) -> str:
+def save_script(script: str, content_dir_name: str, url) -> str:
     ''' Parse link to local script, download
         the file and return its local path '''
     link = script.get('src')
@@ -52,14 +52,14 @@ def save_script(script: str, path_for_files: str, url) -> str:
             logging.error(f'Could not download script from src: {link}')
         script_content = js_response.text
         script_name = parse_name(link, 'js')
-        script_path = os.path.join(path_for_files, script_name)
+        script_path = os.path.join(content_dir_name, script_name)
         with open(script_path, "w+") as f:
             f.write(script_content)
             logging.debug(f'Script saved: {script_path}')
             return script_path
 
 
-def save_resource(resource: str, path_for_files: str, url: str) -> str:
+def save_resource(resource: str, content_dir_name: str, url: str) -> str:
     ''' Parse link to css file, download the file and return its local path '''
     # parse target url
     link = resource.get('href')
@@ -81,7 +81,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         else:
             item_type = 'html'
         resource_name = parse_name(link, f'{item_type}')
-        resource_path = os.path.join(path_for_files, resource_name)
+        resource_path = os.path.join(content_dir_name, resource_name)
         with open(resource_path, "w+") as f:
             f.write(resource_content)
             logging.debug(f'Resource saved: {resource_path}')
