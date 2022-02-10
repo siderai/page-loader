@@ -42,7 +42,7 @@ def download(url: str, content_path: str) -> str:
     # save image from page, then replace its url by path of downloaded file
     img_items = soup.find_all('img')
     for img in img_items:
-        local_path_to_img = save_image(img_items, path_for_files, url)
+        local_path_to_img = save_image(img, path_for_files, url)
         if local_path_to_img:
             img['src'] = local_path_to_img
 
