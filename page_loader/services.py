@@ -7,38 +7,85 @@ from typing import List
 import requests
 
 
-def save_images(img_items: List[str], path_for_files: str, url: str):
-    ''' Save images to enable full offline access to page '''
+def save_image(img: str, path_for_files: str, url: str) -> str:
+    ''' Save images to enable full offline access to page,
+        then return img's path to be updated in resuling html '''
     prefix = gen_images_prefix(url)
-    for img in img_items:
-        # parse image url
-        link = img.get('src')
+    # parse image url
+    link = img.get('src')
+    if not link:
+        logging.debug(f'Empty link in img src: {img}')
+        link = img.get('href')
         if not link:
-            logging.debug(f'Empty link in img src: {img}')
-            link = img.get('href')
-            if not link:
-                logging.error(f'Empty link in img href: {img}')
-                continue
-        # unificate url
-        if link.startswith('/'):
-            link = urljoin(url, link)
-            logging.debug(f'Img link parsed: {link}')
-        logging.debug(f'Resource full link parsed: {link}')
-        # download only from the same subdomain
-        if is_equal_hostname(url, link):
-            raw_img = requests.get(link, stream=True)
-            if raw_img.status_code != 200:
-                logging.error('Could not connect to server, '
-                                f'image url: {link}')
-            img_name = prefix + parse_name(link, 'img')
-            img_path = os.path.join(path_for_files, img_name)
-            try:
-                with open(img_path, "wb+") as f:
-                    shutil.copyfileobj(raw_img.raw, f)
-                logging.debug(f'Img saved: {img_path}')
-            except PermissionError():
-                logging.error('Could not save img to file '
-                                'due to permission error')
+            logging.error(f'Empty link in img href: {img}')
+            return
+    # equalize relative and absolute url path
+    link = unificate_url(url, link)
+    logging.debug(f'Resource full link parsed: {link}')
+    if is_equal_hostname(url, link):
+        raw_img = requests.get(link, stream=True)
+        if raw_img.status_code != 200:
+            logging.error('Could not connect to server, '
+                        f'image url: {link}')
+        img_name = prefix + parse_name(link, 'img')
+        img_path = os.path.join(path_for_files, img_name)
+        with open(img_path, "wb+") as f:
+            shutil.copyfileobj(raw_img.raw, f)
+        logging.debug(f'Img saved: {img_path}')
+        return img_path
+
+
+def save_script(script: str, path_for_files: str, url) -> str:
+    ''' Parse link to local script, download the file and return its local path '''
+    link = script.get('src')
+    if not link:
+        logging.debug(f'Empty link in script src: {script}')
+        link = script.get('href')
+        if not link:
+            logging.error(f'Empty link in script href: {script}')
+            return
+    link = unificate_url(url, link)
+    logging.debug(f'Script full link parsed: {link}')
+    if is_equal_hostname(url, link):
+        js_response = requests.get(link)
+        if js_response.status_code != 200:
+            logging.error(f'Could not download script from src: {link}')
+        script_content = js_response.text
+        script_name = parse_name(link, 'js')
+        script_path = os.path.join(path_for_files, script_name)
+        with open(script_path, "w+") as f:
+            f.write(script_content)
+            logging.debug(f'Script saved: {script_path}')
+            return script_path
+
+
+def save_local_resource(resource: str, path_for_files: str, url: str) -> str:
+    ''' Parse link to css file, download the file and return its local path '''
+    # parse target url
+    link = resource.get('href')
+    if not link:
+        logging.debug(f'Empty link in resource href: {resource}')
+        link = resource.get('src')
+        if not link:
+            logging.error(f'Empty link in resource src: {resource}')
+    link = unificate_url(url, link)
+    logging.debug(f'Resource full link parsed: {link}')
+    if is_equal_hostname(url, link):
+        res = requests.get(link)
+        if resource.status_code != 200:
+            logging.error('Could not download '
+                          f'resource from href: {link}')
+        resource_content = res.text
+        if link.endswith('.css'):
+            item_type = 'css'
+        else:
+            item_type = 'html'
+        resource_name = parse_name(link, f'{item_type}')
+        resource_path = os.path.join(path_for_files, resource_name)
+        with open(resource_path, "w+") as f:
+            f.write(resource_content)
+            logging.debug(f'Resource saved: {resource_path}')
+            return resource_path
 
 
 def gen_images_prefix(url: str) -> str:
@@ -50,65 +97,15 @@ def gen_images_prefix(url: str) -> str:
     return prefix
 
 
+def unificate_url(url, link):
+    if link.startswith('/'):
+        link = urljoin(url, link)
+    return link
+
+
 def is_equal_hostname(main_url, item_url):
+    ''' download only from the same subdomain'''
     return urlparse(main_url).hostname == urlparse(item_url).hostname
-
-
-def save_scripts(scripts: List[str], path_for_files: str, url):
-    for script in scripts:
-
-        link = script.get('src')
-        if not link:
-            logging.debug(f'Empty link in script src: {script}')
-            link = script.get('href')
-            if not link:
-                logging.error(f'Empty link in script href: {script}')
-                continue
-        if link.startswith('/'):
-            link = urljoin(url, link)
-            logging.debug(f'Script link parsed: {link}')
-        logging.debug(f'Resource full link parsed: {link}')
-        if is_equal_hostname(url, link):
-            js_response = requests.get(link)
-            if js_response.status_code != 200:
-                logging.error(f'Could not download script from src: {link}')
-            script_content = js_response.text
-            script_name = parse_name(link, 'js')
-            script_path = os.path.join(path_for_files, script_name)
-            with open(script_path, "w+") as f:
-                f.write(script_content)
-                logging.debug(f'Script saved: {script_path}')
-
-
-def save_local_resources(resources: List[str], path_for_files: str, url: str):
-    for resource in resources:
-        # parse target url
-        link = resource.get('href')
-        if not link:
-            logging.debug(f'Empty link in resource href: {resource}')
-            link = resource.get('src')
-            if not link:
-                logging.error(f'Empty link in resource src: {resource}')
-        # equalize relative and absolute url path
-        if link.startswith('/'):
-            link = urljoin(url, link)
-            logging.debug(f'Resource link parsed: {link}')
-        logging.debug(f'Resource full link parsed: {link}')
-        if is_equal_hostname(url, link):
-            res = requests.get(link)
-            if resource.status_code != 200:
-                logging.error('Could not download '
-                                f'resource from href: {link}')
-            resource_content = res.text
-            if link.endswith('.css'):
-                item_type = 'css'
-            else:
-                item_type = 'html'
-            resource_name = parse_name(link, f'{item_type}')
-            resource_path = os.path.join(path_for_files, resource_name)
-            with open(resource_path, "w+") as f:
-                f.write(resource_content)
-                logging.debug(f'Resource saved: {resource_path}')
 
 
 def parse_name(url: str, item_type: str):

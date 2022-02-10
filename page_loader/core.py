@@ -4,29 +4,24 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from page_loader.services import parse_name, save_images, save_scripts
-from page_loader.services import save_local_resources
+from page_loader.services import *
+
 
 
 logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
 
 
-def download(url: str, content_path: str) -> str:
-    # save page as html
-    name = parse_name(url, 'html')
-    path = os.path.join(content_path, name)
+def download_page(url: str, content_path: str) -> str:
+    # make initial request
     request = requests.get(url)
     if request.status_code != 200:
         logging.error('Initial request failed '
-                        f'with code: {request.status_code}')
+                      f'with code: {request.status_code}')
         raise Exception('Initial connection failed!')
     else:
         logging.debug(f'Connection established: {url}')
-    with open(path, 'w+') as html:
-        html.write(request.text)
-
-    # prepare env to save page content (img, png, js, css)
+    # prepare file system for saving page content (img, png, js, css)
     content_dir_name = parse_name(url, 'dir')
     path_for_files = os.path.join(content_path, content_dir_name)
     if not os.path.isdir(path_for_files):
@@ -41,31 +36,31 @@ def download(url: str, content_path: str) -> str:
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
-    # save images from page
+    # save image from page, then replace its url by path of downloaded file
     img_items = soup.find_all('img')
-    save_images(img_items, path_for_files, url)
+    for img in img_items:
+        local_path_to_img = save_image(img_items, path_for_files, url)
+        if local_path_to_img:
+            img['src'] = local_path_to_img
 
     # save JS files
     scripts = soup.find_all('script')
-    save_scripts(scripts, path_for_files, url)
+    for script in scripts:
+        local_path_to_script = save_script(scripts, path_for_files, url)
+        if local_path_to_script:
+            script['src'] = local_path_to_script
 
     # save CSS
     resources = soup.find_all('link')
-    save_local_resources(resources, path_for_files, url)
+    for res in resources:
+        local_path_to_res = save_resource(res, path_for_files, url)
+        if local_path_to_res:
+            res['href'] = local_path_to_res
 
-    # change url paths in html to local paths
+    # save page as html locally
+    name = parse_name(url, 'html')
+    path = os.path.join(content_path, name)
+    with open(path, 'w+') as html:
+        html.write(soup.prettify(formatter="html"))
 
     return path
-
-
-# сгенерировать имя папки с контентом
-# создать папку с таким названием
-
-
-# Итерация:
-# спарсить имя изображения
-# спарсить ссылку на изображение
-# скачать изображение
-# сгенерировать имя файла для локального хранения
-
-# заменить в исходном Html
