@@ -20,6 +20,8 @@ def download(url: str, content_path: str) -> str:
         raise Exception('Initial connection failed!')
     else:
         logging.debug(f'Connection established: {url}')
+    with open(content_path, 'w+') as html:
+        html.write(request.text)
     # prepare file system for saving page content (img, png, js, css)
     content_dir_name = parse_name(url, 'dir')
     path_for_files = os.path.join(content_path, content_dir_name)
