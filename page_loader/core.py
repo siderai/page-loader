@@ -4,7 +4,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from page_loader.services import parse_name, save_images, save_scripts, save_css
+from page_loader.services import parse_name, save_images, save_scripts
+from page_loader.services import save_local_resources
 
 
 logging.basicConfig(level='DEBUG')
