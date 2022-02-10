@@ -1,10 +1,9 @@
-from urllib.parse import urlparse
-from tempfile import TemporaryDirectory, TemporaryFile
+# from urllib.parse import urlparse
+# from tempfile import TemporaryDirectory, TemporaryFile
 
 import pytest
 
 from page_loader.services import *
-
 
 
 @pytest.fixture
@@ -67,23 +66,23 @@ def test_parse_name(url, urla, default):
     assert parse_name(urla, 'html') == 'en-wikipedia-org-wiki-URL.html'
 
     assert parse_name('https://ru.hexlet.io/packs/js/runtime.js',
-        'script') == 'ru-hexlet-io-packs-js-runtime.js'
+                      'script') == 'ru-hexlet-io-packs-js-runtime.js'
     assert parse_name('https://ru.hexlet.io/packs/js/runtime.css',
-        'css') == 'ru-hexlet-io-packs-js-runtime.css'
+                      'css') == 'ru-hexlet-io-packs-js-runtime.css'
 
-    assert parse_name("/assets/professions/nodejs.png",
-        'img') == '-assets-professions-nodejs.png'
+    assert parse_name('/assets/professions/nodejs.png',
+                      'img') == '-assets-professions-nodejs.png'
     assert parse_name('/local/templates/furniture_red/apple-icon-144x144.jpg',
-        'img') == '-local-templates-furniture-red-apple-icon-144x144.jpg'
-
+                      'img') == '-local-templates-furniture'\
+        '-red-apple-icon-144x144.jpg'
     assert parse_name(url, 'dir') == 'python-poetry-org-docs_files'
 
 
-def test_is_equal_netloc(hexlet):
+def test_is_equal_hostname(hexlet):
     url_false = 'https://cd23.hexlet.io/courses'
     url_true = 'https://ru.hexlet.io/data'
-    assert is_equal_netloc(hexlet, url_false) is False
-    assert is_equal_netloc(hexlet, url_true)
+    assert not is_equal_hostname(hexlet, url_false)
+    assert is_equal_hostname(hexlet, url_true)
 
 
 def test_save_images():
@@ -93,14 +92,14 @@ def test_save_images():
 def test_save_scripts():
     pass
 
+
 def test_save_css():
     pass
 
 
-
 # use mocks
 
-# def test_download(hexletsaved, hexlet, folder='/'):
+# def test_download_page(hexletsaved, hexlet, folder='/'):
 #     file_name = parse_name(hexlet)
 #     with TemporaryDirectory(folder) as td:
 #         path = download(hexlet, td)
@@ -109,9 +108,6 @@ def test_save_css():
 #         with open(path) as html:
 #             page = html.read()
 #             assert page == hexletsaved
-
-
-
 
 
 def test_gen_images_prefix(url):
