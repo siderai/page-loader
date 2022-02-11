@@ -44,7 +44,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
     logging.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
-        js_response.encoding == 'utf-8-sig'
+        js_response.encoding == 'ascii'
         script_name = parse_name(link, 'js')
         script_path = os.path.join(path_for_files, script_name)
         with open(script_path, "w+") as f:
@@ -66,7 +66,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
-        res.encoding == 'utf-8-sig'
+        res.encoding == 'ascii'
         if link.endswith('.css'):
             item_type = 'css'
         else:
