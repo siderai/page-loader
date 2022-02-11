@@ -44,11 +44,11 @@ def save_script(script: str, path_for_files: str, url) -> str:
     logging.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
-        js_response.encoding == 'utf-8'
+        js_response.encoding == 'utf-16'
         script_name = parse_name(link, 'js')
         script_path = os.path.join(path_for_files, script_name)
         with open(script_path, "w+") as f:
-            f.write(f'\xef\xbb\xbf{js_response.text}')
+            f.write(js_response.text)
         logging.debug(f'Script saved: {script_path}')
         return script_path
 
@@ -66,7 +66,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
-        res.encoding == 'utf-8'
+        res.encoding == 'utf-16'
         if link.endswith('.css'):
             item_type = 'css'
         else:
@@ -74,7 +74,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         resource_name = parse_name(link, f'{item_type}')
         resource_path = os.path.join(path_for_files, resource_name)
         with open(resource_path, "w+") as f:
-            f.write(f'\xef\xbb\xbf{res.text}')
+            f.write(res.text)
         logging.debug(f'Resource saved: {resource_path}')
         return resource_path
 
