@@ -22,18 +22,12 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         raw_img = requests.get(link, stream=True)
-        if raw_img.status_code == requests.codes.ok:
-            img_name = parse_name(link, 'img')
-            img_path = os.path.join(path_for_files, img_name)
-            with open(img_path, "wb+") as f:
-                shutil.copyfileobj(raw_img.raw, f)
-            logging.debug(f'Img saved: {img_path}')
-            return img_path
-        else:
-            logging.error('Could not connect to server, '
-                          f'image url: {link}')
-            return ''
-
+        img_name = parse_name(link, 'img')
+        img_path = os.path.join(path_for_files, img_name)
+        with open(img_path, "wb+") as f:
+            shutil.copyfileobj(raw_img.raw, f)
+        logging.debug(f'Img saved: {img_path}')
+        return img_path
 
 
 def save_script(script: str, path_for_files: str, url) -> str:
@@ -51,17 +45,13 @@ def save_script(script: str, path_for_files: str, url) -> str:
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
         js_response.encoding == 'utf-8'
-        if js_response.status_code == requests.codes.ok:
-            script_content = js_response.text
-            script_name = parse_name(link, 'js')
-            script_path = os.path.join(path_for_files, script_name)
-            with open(script_path, "w+") as f:
-                f.write(script_content)
-            logging.debug(f'Script saved: {script_path}')
-            return script_path
-        else:
-            logging.error(f'Could not download script from src: {link}')
-            return ''
+        script_content = js_response.text
+        script_name = parse_name(link, 'js')
+        script_path = os.path.join(path_for_files, script_name)
+        with open(script_path, "w+") as f:
+            f.write(script_content)
+        logging.debug(f'Script saved: {script_path}')
+        return script_path
 
 
 def save_resource(resource: str, path_for_files: str, url: str) -> str:
@@ -78,20 +68,16 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     if is_equal_hostname(url, link):
         res = requests.get(link)
         res.encoding == 'utf-8'
-        if resource.status_code == requests.codes.ok:
-            if link.endswith('.css'):
-                item_type = 'css'
-            else:
-                item_type = 'html'
-            resource_name = parse_name(link, f'{item_type}')
-            resource_path = os.path.join(path_for_files, resource_name)
-            with open(resource_path, "w+") as f:
-                f.write(res.text)
-                logging.debug(f'Resource saved: {resource_path}')
-            return resource_path
+        if link.endswith('.css'):
+            item_type = 'css'
         else:
-            logging.error('Could not download '
-                          f'resource from href: {link}')
+            item_type = 'html'
+        resource_name = parse_name(link, f'{item_type}')
+        resource_path = os.path.join(path_for_files, resource_name)
+        with open(resource_path, "w+") as f:
+            f.write(res.text)
+        logging.debug(f'Resource saved: {resource_path}')
+        return resource_path
 
 
 def unificate_url(url: str, link: str) -> str:
