@@ -22,7 +22,7 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         raw_img = requests.get(link, stream=True)
-        if raw_img.status_code != 200:
+        if raw_img.status_code == 404:
             logging.error('Could not connect to server, '
                           f'image url: {link}')
         img_name = parse_name(link, 'img')
@@ -30,7 +30,7 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
         with open(img_path, "wb+") as f:
             shutil.copyfileobj(raw_img.raw, f)
         logging.debug(f'Img saved: {img_path}')
-        return img_path
+    return img_path
 
 
 def save_script(script: str, path_for_files: str, url) -> str:
@@ -47,7 +47,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
     logging.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
-        if js_response.status_code != 200:
+        if js_response.status_code == 404:
             logging.error(f'Could not download script from src: {link}')
         script_content = js_response.text
         script_name = parse_name(link, 'js')
@@ -55,7 +55,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
         with open(script_path, "w+") as f:
             f.write(script_content)
             logging.debug(f'Script saved: {script_path}')
-            return script_path
+        return script_path
 
 
 def save_resource(resource: str, path_for_files: str, url: str) -> str:
@@ -71,7 +71,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
-        if resource.status_code != 200:
+        if resource.status_code == 404:
             logging.error('Could not download '
                           f'resource from href: {link}')
         resource_content = res.text
@@ -84,7 +84,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         with open(resource_path, "w+") as f:
             f.write(resource_content)
             logging.debug(f'Resource saved: {resource_path}')
-            return resource_path
+        return resource_path
 
 
 def unificate_url(url: str, link: str) -> str:
