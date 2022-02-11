@@ -1,3 +1,4 @@
+#!/usr/bin/env
 import argparse
 
 from core import download

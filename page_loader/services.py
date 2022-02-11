@@ -78,7 +78,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
                 f.write(res.text)
             logging.debug(f'Resource saved: {resource_path}')
         else:
-             with open(resource_path, "w+") as f:
+            with open(resource_path, "w+") as f:
                 f.write(res.text)
         return resource_path
 
