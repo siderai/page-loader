@@ -47,7 +47,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
         js_response.encoding == 'utf-8'
         script_name = parse_name(link, 'js')
         script_path = os.path.join(path_for_files, script_name)
-        with open(script_path, "w+", encoding='utf-8-sig') as f:
+        with open(script_path, "w+") as f:
             f.write(js_response.text)
         logging.debug(f'Script saved: {script_path}')
         return script_path
