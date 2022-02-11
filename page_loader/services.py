@@ -48,8 +48,8 @@ def save_script(script: str, path_for_files: str, url) -> str:
         script_content = js_response.text
         script_name = parse_name(link, 'js')
         script_path = os.path.join(path_for_files, script_name)
-        with open(script_path, "w+") as f:
-            f.write(script_content.encode("utf-8"))
+        with open(script_path, "wb+") as f:
+            shutil.copyfileobj(script_content.encode("utf-8"), f)
         logging.debug(f'Script saved: {script_path}')
         return script_path
 
@@ -74,8 +74,8 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
             item_type = 'html'
         resource_name = parse_name(link, f'{item_type}')
         resource_path = os.path.join(path_for_files, resource_name)
-        with open(resource_path, "w+") as f:
-            f.write(res.text.encode("utf-8"))
+        with open(resource_path, "wb+") as f:
+            shutil.copyfileobj(res.text.encode("utf-8"), f)
         logging.debug(f'Resource saved: {resource_path}')
         return resource_path
 
