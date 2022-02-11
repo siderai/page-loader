@@ -108,7 +108,3 @@ def test_save_css():
 #         with open(path) as html:
 #             page = html.read()
 #             assert page == hexletsaved
-
-
-def test_gen_images_prefix(url):
-    assert gen_images_prefix(url) == 'python-poetry-org'
