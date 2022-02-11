@@ -73,9 +73,13 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
             item_type = 'html'
         resource_name = parse_name(link, f'{item_type}')
         resource_path = os.path.join(path_for_files, resource_name)
-        with open(resource_path, "w+", encoding='utf-8-sig') as f:
-            f.write(res.text)
-        logging.debug(f'Resource saved: {resource_path}')
+        if item_type == 'css':
+            with open(resource_path, "w+", encoding='utf-8-sig') as f:
+                f.write(res.text)
+            logging.debug(f'Resource saved: {resource_path}')
+        else:
+             with open(resource_path, "w+") as f:
+                f.write(res.text)
         return resource_path
 
 
