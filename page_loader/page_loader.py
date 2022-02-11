@@ -6,7 +6,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from services import *
+from page_loader.services import *
 
 
 logging.basicConfig(level='DEBUG')
