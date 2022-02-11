@@ -9,7 +9,6 @@ import requests
 def save_image(img: str, path_for_files: str, url: str) -> str:
     ''' Save images to enable full offline access to page,
         then return img's path to be updated in resuling html '''
-    prefix = gen_images_prefix(url)
     # parse image url
     link = img['src']
     if not link:
