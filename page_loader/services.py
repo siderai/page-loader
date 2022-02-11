@@ -22,9 +22,10 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         raw_img = requests.get(link, stream=True)
-        if raw_img.status_code == 404:
+        if raw_img.status_code != requests.codes.ok:
             logging.error('Could not connect to server, '
                           f'image url: {link}')
+            raw_img.raise_for_status()
         img_name = parse_name(link, 'img')
         img_path = os.path.join(path_for_files, img_name)
         with open(img_path, "wb+") as f:
@@ -47,9 +48,10 @@ def save_script(script: str, path_for_files: str, url) -> str:
     logging.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
-        js_response.encoding = 'ascii'
-        if js_response.status_code == 404:
+        logging.debug(js_response.encoding)
+        if js_response.status_code != requests.codes.ok:
             logging.error(f'Could not download script from src: {link}')
+            js_response.raise_for_status()
         script_content = js_response.text
         script_name = parse_name(link, 'js')
         script_path = os.path.join(path_for_files, script_name)
@@ -72,11 +74,11 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
-        res.encoding = 'ascii'
-        if resource.status_code == 404:
+        logging.debug(res.encoding)
+        if resource.status_code != requests.codes.ok:
             logging.error('Could not download '
                           f'resource from href: {link}')
-        resource_content = res.text
+            resource.raise_for_status()
         if link.endswith('.css'):
             item_type = 'css'
         else:
@@ -84,7 +86,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         resource_name = parse_name(link, f'{item_type}')
         resource_path = os.path.join(path_for_files, resource_name)
         with open(resource_path, "w+") as f:
-            f.write(resource_content)
+            f.write(res.text)
             logging.debug(f'Resource saved: {resource_path}')
         return resource_path
 
