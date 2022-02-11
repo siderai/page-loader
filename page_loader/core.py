@@ -42,29 +42,31 @@ def download(url: str, content_path: str) -> str:
     # save image from page, then replace its url by path of downloaded file
     img_items = soup.find_all('img')
     for img in img_items:
-        local_path_to_img = save_image(img, path_for_files, url)
-        if local_path_to_img:
-            relpath = os.path.relpath(local_path_to_img, content_dir_name)
-            img['src'] = relpath
+        img_path = save_image(img, path_for_files, url)
+        if img_path:
+            img_rel_path = content_dir_name + img_path.split(
+                content_dir_name)[1]
+            img['src'] = img_rel_path
 
     # save JS files
     scripts = soup.find_all('script')
     for script in scripts:
-        local_path_to_script = save_script(script, path_for_files, url)
-        if local_path_to_script:
-            relpath = os.path.relpath(local_path_to_script, content_dir_name)
-            script['src'] = relpath
+        script_path = save_script(script, path_for_files, url)
+        if script_path:
+            script_rel_path = content_dir_name + script_path.split(
+                content_dir_name)[1]
+            script['src'] = script_rel_path
 
     # save CSS
     resources = soup.find_all('link')
     for res in resources:
-        local_path_to_res = save_resource(res, path_for_files, url)
-        if local_path_to_res:
-            relpath = os.path.relpath(local_path_to_res, content_dir_name)
-            res['href'] = relpath
+        res_path = save_resource(res, path_for_files, url)
+        if res_path:
+            res_rel_path = content_dir_name + res_path.split(
+                content_dir_name)[1]
+            res['href'] = res_rel_path
 
     # save page as html locally
-
     with open(path, 'w+') as html:
         html.write(soup.prettify())
 
