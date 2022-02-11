@@ -47,6 +47,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
     logging.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
+        js_response.encoding = 'ascii'
         if js_response.status_code == 404:
             logging.error(f'Could not download script from src: {link}')
         script_content = js_response.text
@@ -71,6 +72,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
+        res.encoding = 'ascii'
         if resource.status_code == 404:
             logging.error('Could not download '
                           f'resource from href: {link}')
