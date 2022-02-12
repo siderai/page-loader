@@ -6,6 +6,10 @@ from urllib.parse import urlparse, urljoin
 import requests
 
 
+logging.basicConfig(level='ERROR')
+logger = logging.getLogger()
+
+
 def save_image(img: str, path_for_files: str, url: str) -> str:
     ''' Save images to enable full offline access to page,
         then return img's path to be updated in resuling html '''
@@ -15,7 +19,7 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
         logging.debug(f'Empty link in img src: {img}')
         link = img['href']
         if not link:
-            logging.error(f'Empty link in img href: {img}')
+            logging.debug(f'Empty link in img href: {img}')
             return ''
     # equalize relative and absolute url path
     link = unificate_url(url, link)
@@ -38,7 +42,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
         logging.debug(f'Empty link in script src: {script}')
         link = script.get('href')
         if not link:
-            logging.error(f'Empty link in script href: {script}')
+            logging.debug(f'Empty link in script href: {script}')
             return ''
     link = unificate_url(url, link)
     logging.debug(f'Script full link parsed: {link}')
@@ -61,7 +65,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         logging.debug(f'Empty link in resource href: {resource}')
         link = resource.get('src')
         if not link:
-            logging.error(f'Empty link in resource src: {resource}')
+            logging.debug(f'Empty link in resource src: {resource}')
     link = unificate_url(url, link)
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
@@ -74,7 +78,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         resource_name = parse_name(link, f'{item_type}')
         resource_path = os.path.join(path_for_files, resource_name)
         if item_type == 'css':
-            with open(resource_path, "w+", encoding='utf-8') as f:
+            with open(resource_path, "w+", encoding='utf-8-sig') as f:
                 f.write(res.text)
             logging.debug(f'Resource saved: {resource_path}')
         else:
@@ -100,7 +104,7 @@ def parse_name(url: str, item_type: str):
 
     link = delete_scheme_from_url(url)
     name = format_url_to_name(link)
-    name = switch_ending(name, item_type)
+    name = switch_extension(name, item_type)
 
     return name
 
@@ -121,7 +125,7 @@ def format_url_to_name(link: str) -> str:
     return name
 
 
-def switch_ending(name: str, item_type: str) -> str:
+def switch_extension(name: str, item_type: str) -> str:
     ''' Edit ending of parsed name according to format '''
     # text files
     if name.endswith('-js'):
@@ -139,6 +143,6 @@ def switch_ending(name: str, item_type: str) -> str:
     elif item_type == 'dir':
         name += '_files'
     else:
-        logging.debug(f'Failed to format name ending: {name}')
+        logging.debug(f'Failed to format name extension: {name}')
 
     return name

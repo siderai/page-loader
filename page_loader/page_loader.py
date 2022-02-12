@@ -4,12 +4,13 @@ import os
 import logging
 
 import requests
+import progress
 from bs4 import BeautifulSoup
 
-from .services import *
+from services import *
 
 
-logging.basicConfig(level='DEBUG')
+logging.basicConfig(level='INFO')
 logger = logging.getLogger()
 
 
@@ -19,7 +20,14 @@ def main():
     parser.add_argument('-o', '--output', default=os.getcwd(),
                         help='set output folder')
     args = parser.parse_args()
-    print(download(args.url, content_path=args.output))
+    try:
+        print(download(args.url, content_path=args.output))
+    except NetworkException(Exception):
+        logging.info('Could not download the page: connection error')
+    except PermissionError:
+        logging.info('Could not save to a local directory as '
+                     'it does not exist and cannot be created')
+
 
 
 def download(url: str, content_path: str) -> str:
@@ -28,7 +36,7 @@ def download(url: str, content_path: str) -> str:
     if request.status_code != 200:
         logging.error('Initial request failed '
                       f'with code: {request.status_code}')
-        raise Exception('Initial connection failed!')
+        raise NetworkException(Exception)
     else:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
@@ -55,6 +63,7 @@ def download(url: str, content_path: str) -> str:
     for img in img_items:
         img_path = save_image(img, path_for_files, url)
         if img_path:
+            # if file is downloaded, we need to change its path to local
             img_rel_path = content_dir_name + img_path.split(
                 content_dir_name)[1]
             img['src'] = img_rel_path
