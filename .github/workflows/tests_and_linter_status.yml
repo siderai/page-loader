@@ -1,4 +1,4 @@
-name: Gendiff CI
+name: Tests and linter status
 
 on:
   push:
