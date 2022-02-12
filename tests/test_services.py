@@ -3,7 +3,8 @@
 
 import pytest
 
-from page_loader.services import *
+from page_loader.services import delete_scheme_from_url, format_url_to_name
+from page_loader.services import switch_extension, parse_name, is_equal_hostname
 
 
 @pytest.fixture
@@ -44,20 +45,20 @@ def test_format_url_to_name():
         'ru.hexlet.io/courses') == 'ru-hexlet-io-courses'
 
 
-def test_switch_ending():
-    assert switch_ending(
+def test_switch_extension():
+    assert switch_extension(
         'ru-hexlet-io-courses-js', 'script') == 'ru-hexlet-io-courses.js'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses-css', 'css') == 'ru-hexlet-io-courses.css'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses-jpg', 'img') == 'ru-hexlet-io-courses.jpg'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses-png', 'img') == 'ru-hexlet-io-courses.png'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses', 'html') == 'ru-hexlet-io-courses.html'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses', 'dir') == 'ru-hexlet-io-courses_files'
-    assert switch_ending(
+    assert switch_extension(
         'ru-hexlet-io-courses', 'smth') == 'ru-hexlet-io-courses'
 
 
