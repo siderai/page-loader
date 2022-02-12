@@ -70,7 +70,7 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     logging.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
-        res.encoding == 'utf-8'
+        res.encoding = 'utf-8'
         if link.endswith('.css'):
             item_type = 'css'
         else:
