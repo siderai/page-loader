@@ -6,7 +6,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from .services import *
+from .services import save_image, save_script, save_resource, parse_name
+
 
 
 logging.basicConfig(level='INFO')
@@ -56,7 +57,7 @@ def download(url: str, content_path: str) -> str:
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
-    # save image from page, then replace its url by path of downloaded file
+    # save image, then replace its url by path to downloaded file
     img_items = soup.find_all('img')
     for img in img_items:
         img_path = save_image(img, path_for_files, url)
