@@ -4,10 +4,9 @@ import os
 import logging
 
 import requests
-import progress
 from bs4 import BeautifulSoup
 
-from services import *
+from .services import *
 
 
 logging.basicConfig(level='INFO')
@@ -27,7 +26,6 @@ def main():
     except PermissionError:
         logging.info('Could not save to a local directory as '
                      'it does not exist and cannot be created')
-
 
 
 def download(url: str, content_path: str) -> str:
