@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     try:
         print(download(args.url, content_path=args.output))
-    except NetworkException(Exception):
+    except Exception():
         logging.info('Could not download the page: connection error')
     except PermissionError:
         logging.info('Could not save to a local directory as '
@@ -34,7 +34,7 @@ def download(url: str, content_path: str) -> str:
     if request.status_code != 200:
         logging.error('Initial request failed '
                       f'with code: {request.status_code}')
-        raise Exception
+        raise Exception()
     else:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
