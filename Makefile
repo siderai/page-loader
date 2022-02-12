@@ -3,6 +3,7 @@ install:
 
 package-install:
 	poetry install
+	rm -rf dist
 	poetry build
 	pip install --upgrade pip
 	python3 -m pip install --user dist/*.whl
