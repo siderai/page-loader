@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 from .services import save_image, save_script, save_resource, parse_name
 
 
-
 logging.basicConfig(level='INFO')
 logger = logging.getLogger()
 
@@ -35,7 +34,7 @@ def download(url: str, content_path: str) -> str:
     if request.status_code != 200:
         logging.error('Initial request failed '
                       f'with code: {request.status_code}')
-        raise NetworkException(Exception)
+        raise Exception
     else:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
