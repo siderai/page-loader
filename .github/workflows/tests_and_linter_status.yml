@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest 
     env:
-      CC_TEST_REPORTER_ID: 7445e8dc964f8e80bf8b4b29abaf00e6574afe426aa43afa50f77b6ea47b7c2d
+      CC_TEST_REPORTER_ID: ${{ secrets.PAGE_LOADER_TEST_REPORTER_ID }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
