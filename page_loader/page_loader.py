@@ -52,7 +52,7 @@ def download(url: str, content_path: str) -> str:
             logging.error('Could not save to a local directory as it '
                           'does not exist and cannot be created: no rights')
             raise PermissionError('You have no rights to create '
-                               'a directory with this path')
+                                  'a directory with this path')
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
