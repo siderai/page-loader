@@ -6,7 +6,10 @@ def test_download():
 
 
 def test_main(capsys):
-    main(['https://python-poetry.org/docs/', "--output", "/home"])
+    main(['https://python-poetry.org/docs/', "--output", "tmp/home/"])
     captured = capsys.readouterr()
-    assert captured.out == "/home/python-poetry-org-docs.html\n"
+    assert captured.out == "tmp/home/python-poetry-org-docs.html\n"
+    main(['https://python-poetry.org/docs/', "--output", "/tmp/home/"])
+    captured = capsys.readouterr()
+    assert captured.out == "/tmp/home/python-poetry-org-docs.html\n"
     # with open('fixtures/courses_fake.html') as page:
