@@ -9,28 +9,30 @@ import requests
 logging.basicConfig(level='ERROR')
 logger = logging.getLogger()
 
+# functions for page_loader.py
+
 
 def save_image(img: str, path_for_files: str, url: str) -> str:
-    ''' Save images to enable full offline access to page,
-        then return img's path to be updated in resuling html '''
+    ''' Save images for offline access to page,
+        then return img's local path'''
     # parse image url
     link = img['src']
     if not link:
-        logging.debug(f'Empty link in img src: {img}')
+        logger.debug(f'Empty link in img src: {img}')
         link = img['href']
         if not link:
-            logging.debug(f'Empty link in img href: {img}')
+            logger.debug(f'Empty link in img href: {img}')
             return ''
     # equalize relative and absolute url path
     link = unificate_url(url, link)
-    logging.debug(f'Resource full link parsed: {link}')
+    logger.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         raw_img = requests.get(link, stream=True)
         img_name = parse_name(link, 'img')
         img_path = os.path.join(path_for_files, img_name)
         with open(img_path, "wb+") as f:
             shutil.copyfileobj(raw_img.raw, f)
-        logging.debug(f'Img saved: {img_path}')
+        logger.debug(f'Img saved: {img_path}')
         return img_path
 
 
@@ -39,13 +41,13 @@ def save_script(script: str, path_for_files: str, url) -> str:
         the file and return its local path '''
     link = script.get('src')
     if not link:
-        logging.debug(f'Empty link in script src: {script}')
+        logger.debug(f'Empty link in script src: {script}')
         link = script.get('href')
         if not link:
-            logging.debug(f'Empty link in script href: {script}')
+            logger.debug(f'Empty link in script href: {script}')
             return ''
     link = unificate_url(url, link)
-    logging.debug(f'Script full link parsed: {link}')
+    logger.debug(f'Script full link parsed: {link}')
     if is_equal_hostname(url, link):
         js_response = requests.get(link)
         js_response.encoding == 'utf-8'
@@ -53,7 +55,7 @@ def save_script(script: str, path_for_files: str, url) -> str:
         script_path = os.path.join(path_for_files, script_name)
         with open(script_path, "w+") as f:
             f.write(js_response.text)
-        logging.debug(f'Script saved: {script_path}')
+        logger.debug(f'Script saved: {script_path}')
         return script_path
 
 
@@ -62,12 +64,12 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
     # parse target url
     link = resource.get('href')
     if not link:
-        logging.debug(f'Empty link in resource href: {resource}')
+        logger.debug(f'Empty link in resource href: {resource}')
         link = resource.get('src')
         if not link:
-            logging.debug(f'Empty link in resource src: {resource}')
+            logger.debug(f'Empty link in resource src: {resource}')
     link = unificate_url(url, link)
-    logging.debug(f'Resource full link parsed: {link}')
+    logger.debug(f'Resource full link parsed: {link}')
     if is_equal_hostname(url, link):
         res = requests.get(link)
         res.encoding = 'utf-8'
@@ -80,23 +82,11 @@ def save_resource(resource: str, path_for_files: str, url: str) -> str:
         if item_type == 'css':
             with open(resource_path, "w+") as f:
                 f.write(res.text)
-            logging.debug(f'Resource saved: {resource_path}')
+            logger.debug(f'Resource saved: {resource_path}')
         else:
             with open(resource_path, "w+") as f:
                 f.write(res.text)
         return resource_path
-
-
-def unificate_url(url: str, link: str) -> str:
-    ''' Equalize relative and absolute paths '''
-    if link.startswith('/'):
-        link = urljoin(url, link)
-    return link
-
-
-def is_equal_hostname(main_url, item_url):
-    ''' download only from the same subdomain'''
-    return urlparse(main_url).hostname == urlparse(item_url).hostname
 
 
 def parse_name(url: str, item_type: str):
@@ -107,6 +97,8 @@ def parse_name(url: str, item_type: str):
     name = switch_extension(name, item_type)
 
     return name
+
+# Below there are useful internal functions
 
 
 def delete_scheme_from_url(url: str) -> str:
@@ -143,6 +135,18 @@ def switch_extension(name: str, item_type: str) -> str:
     elif item_type == 'dir':
         name += '_files'
     else:
-        logging.debug(f'Failed to format name extension: {name}')
+        logger.debug(f'Failed to format name extension: {name}')
 
     return name
+
+
+def unificate_url(url: str, link: str) -> str:
+    ''' Equalize relative and absolute paths '''
+    if link.startswith('/'):
+        link = urljoin(url, link)
+    return link
+
+
+def is_equal_hostname(main_url, item_url):
+    ''' download only from the same subdomain'''
+    return urlparse(main_url).hostname == urlparse(item_url).hostname
