@@ -1,10 +1,11 @@
 # from urllib.parse import urlparse
 # from tempfile import TemporaryDirectory, TemporaryFile
-
+from urllib.parse import urljoin
 import pytest
 
 from page_loader.services import delete_scheme_from_url, format_url_to_name
 from page_loader.services import switch_extension, parse_name, is_equal_hostname
+from page_loader.services import unificate_url
 
 
 @pytest.fixture
@@ -84,6 +85,11 @@ def test_is_equal_hostname(hexlet):
     url_true = 'https://ru.hexlet.io/data'
     assert not is_equal_hostname(hexlet, url_false)
     assert is_equal_hostname(hexlet, url_true)
+
+
+def test_unificate_url(url, hexlet, default):
+    assert hexlet == unificate_url(url, hexlet)
+    assert urljoin(url, default) == unificate_url(url, default)
 
 
 def test_save_images():
