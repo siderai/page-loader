@@ -2,6 +2,7 @@
 import argparse
 import os
 import logging
+import sys
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,19 +14,19 @@ logging.basicConfig(level='INFO')
 logger = logging.getLogger()
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description='Page Loader')
     parser.add_argument('url', type=str)
     parser.add_argument('-o', '--output', default=os.getcwd(),
-                        help='set output folder')
-    args = parser.parse_args()
+                        help='set output directory')
+    args = parser.parse_args(argv)
     try:
         print(download(args.url, content_path=args.output))
     except Exception():
-        logging.info('Could not download the page: connection error')
+        logging.error('Could not download the page: connection error')
     except PermissionError:
-        logging.info('Could not save to a local directory as '
-                     'it does not exist and cannot be created')
+        logging.error('Could not save to a local directory as '
+                      'it does not exist and cannot be created')
 
 
 def download(url: str, content_path: str) -> str:
@@ -39,8 +40,6 @@ def download(url: str, content_path: str) -> str:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
     path = os.path.join(content_path, name)
-    with open(path, 'w+') as html:
-        html.write(request.text)
 
     # prepare file system for saving page content (img, png, js, css)
     content_dir_name = parse_name(url, 'dir')
@@ -92,4 +91,4 @@ def download(url: str, content_path: str) -> str:
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
