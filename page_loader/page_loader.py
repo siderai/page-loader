@@ -22,7 +22,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         print(download(args.url, content_path=args.output))
-    except Exception():
+    except Exception:
         logging.error('Could not download the page: connection error')
     except PermissionError:
         logging.error('Could not save to a local directory as '
@@ -35,7 +35,7 @@ def download(url: str, content_path: str) -> str:
     if request.status_code != 200:
         logging.error('Initial request failed '
                       f'with code: {request.status_code}')
-        raise Exception()
+        raise Exception
     else:
         logging.debug(f'Connection established: {url}')
     name = parse_name(url, 'html')
@@ -48,10 +48,11 @@ def download(url: str, content_path: str) -> str:
         try:
             os.makedirs(path_for_files)
             logging.debug(f'Created assets directory: {path_for_files}')
-        except PermissionError('You have no rights to create '
-                               'a directory with this path'):
-            logging.error('Could not save to a local directory as '
-                          'it does not exist and cannot be created')
+        except PermissionError:
+            logging.error('Could not save to a local directory as it '
+                          'does not exist and cannot be created: no rights')
+            raise PermissionError('You have no rights to create '
+                               'a directory with this path')
 
     soup = BeautifulSoup(request.content, 'html.parser')
 
