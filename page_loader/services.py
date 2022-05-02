@@ -6,7 +6,7 @@ from urllib.parse import urlparse, urljoin
 import requests
 
 
-logging.basicConfig(level='ERROR')
+logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
 
 # functions for page_loader.py
@@ -147,6 +147,6 @@ def unificate_url(url: str, link: str) -> str:
     return link
 
 
-def is_equal_hostname(main_url, item_url):
-    ''' download only from the same subdomain'''
+def is_equal_hostname(main_url: str, item_url: str):
+    '''Check if asset has the same host as the downloaded page.'''
     return urlparse(main_url).hostname == urlparse(item_url).hostname
