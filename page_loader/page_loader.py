@@ -21,7 +21,7 @@ def main(argv=None):
         print(download(args.url, content_path=args.output))
     except requests.ConnectionError:
         logging.error("Could not download the page: connection error")
-    except OSError:
+    except Exception:
         logging.error(
             "Could not save to a local directory as "
             "it does not exist and cannot be created"
