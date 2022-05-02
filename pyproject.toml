@@ -13,8 +13,9 @@ page-loader = "page_loader.page_loader:main"
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.27.1"
-bs4 = "^0.0.1"
 progress = "^1.6"
+beautifulsoup4 = "^4.11.1"
+bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 requests-mock = "^1.9.3"
