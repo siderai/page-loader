@@ -32,7 +32,8 @@ def download(url: str, content_path: str) -> str:
     # make initial request
     request = requests.get(url)
     if request.status_code != 200:
-        logging.error("Initial request failed " f"with code: {request.status_code}")
+        logging.error("Initial request failed "
+                      f"with code: {request.status_code}")
         raise requests.ConnectionError
     else:
         logging.debug(f"Connection established: {url}")
