@@ -2,8 +2,8 @@
 [![Actions Status](https://github.com/siderai/python-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/siderai/python-project-lvl3/actions)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b69cb85969106592d227/test_coverage)](https://codeclimate.com/github/siderai/page-loader/test_coverage)
 
-# Download web page and its its content
-A Python CLI tool that allows you to save web-page locally without a browser. The page can be properly rendered offline, as external links to assets are replaced by local paths to saved files.
+# Web page downloader
+A Python CLI tool that allows you to save web pages locally without a browser. The page can be properly rendered offline, as external links to assets are replaced by local paths to saved files.
 
 ## Usage:
 ``` bash
