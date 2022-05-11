@@ -19,8 +19,6 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         print(download(args.url, content_path=args.output))
-    except requests.ConnectionError:
-        logging.error("Could not download the page: connection error")
     except Exception:
         logging.error(
             "Could not save to a local directory as "
