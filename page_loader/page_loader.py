@@ -1,13 +1,13 @@
 #!/usr/bin/env
 import argparse
-import os
 import logging
+import os
 import sys
 
 import requests
 from bs4 import BeautifulSoup
 
-from .services import save_image, save_script, save_resource, parse_name
+from .services import parse_name, save_image, save_resource, save_script
 
 
 def main(argv=None):

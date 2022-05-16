@@ -1,10 +1,9 @@
+import logging
 import os
 import shutil
-import logging
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
-
 
 logging.basicConfig(level='DEBUG')
 logger = logging.getLogger()
@@ -36,7 +35,7 @@ def save_image(img: str, path_for_files: str, url: str) -> str:
         return img_path
 
 
-def save_script(script: str, path_for_files: str, url) -> str:
+def save_script(script: str, path_for_files: str, url: str) -> str:
     ''' Parse link to local script, download
         the file and return its local path '''
     link = script.get('src')

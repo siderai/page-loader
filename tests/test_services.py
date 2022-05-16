@@ -1,11 +1,9 @@
-# from urllib.parse import urlparse
-# from tempfile import TemporaryDirectory, TemporaryFile
 from urllib.parse import urljoin
-import pytest
 
-from page_loader.services import delete_scheme_from_url, format_url_to_name
-from page_loader.services import switch_extension, parse_name, is_equal_hostname
-from page_loader.services import unificate_url
+import pytest
+from page_loader.services import (delete_scheme_from_url, format_url_to_name,
+                                  is_equal_hostname, parse_name,
+                                  switch_extension, unificate_url)
 
 
 @pytest.fixture
@@ -30,7 +28,7 @@ def default():
 
 @pytest.fixture
 def hexletsaved():
-    with open('tests/fixtures/courses.html') as courses:
+    with open('tests/fixtures/courses_updated.html') as courses:
         page = courses.read()
     return page
 
@@ -42,25 +40,24 @@ def test_delete_scheme_from_url(hexlet):
 
 
 def test_format_url_to_name():
-    assert format_url_to_name(
-        'ru.hexlet.io/courses') == 'ru-hexlet-io-courses'
+    assert format_url_to_name('ru.hexlet.io/courses') == 'ru-hexlet-io-courses'
 
 
 def test_switch_extension():
-    assert switch_extension(
-        'ru-hexlet-io-courses-js', 'script') == 'ru-hexlet-io-courses.js'
-    assert switch_extension(
-        'ru-hexlet-io-courses-css', 'css') == 'ru-hexlet-io-courses.css'
-    assert switch_extension(
-        'ru-hexlet-io-courses-jpg', 'img') == 'ru-hexlet-io-courses.jpg'
-    assert switch_extension(
-        'ru-hexlet-io-courses-png', 'img') == 'ru-hexlet-io-courses.png'
-    assert switch_extension(
-        'ru-hexlet-io-courses', 'html') == 'ru-hexlet-io-courses.html'
-    assert switch_extension(
-        'ru-hexlet-io-courses', 'dir') == 'ru-hexlet-io-courses_files'
-    assert switch_extension(
-        'ru-hexlet-io-courses', 'smth') == 'ru-hexlet-io-courses'
+    assert switch_extension('ru-hexlet-io-courses-js',
+                            'script') == 'ru-hexlet-io-courses.js'
+    assert switch_extension('ru-hexlet-io-courses-css',
+                            'css') == 'ru-hexlet-io-courses.css'
+    assert switch_extension('ru-hexlet-io-courses-jpg',
+                            'img') == 'ru-hexlet-io-courses.jpg'
+    assert switch_extension('ru-hexlet-io-courses-png',
+                            'img') == 'ru-hexlet-io-courses.png'
+    assert switch_extension('ru-hexlet-io-courses',
+                            'html') == 'ru-hexlet-io-courses.html'
+    assert switch_extension('ru-hexlet-io-courses',
+                            'dir') == 'ru-hexlet-io-courses_files'
+    assert switch_extension('ru-hexlet-io-courses',
+                            'smth') == 'ru-hexlet-io-courses'
 
 
 def test_parse_name(url, urla, default):
@@ -90,28 +87,3 @@ def test_is_equal_hostname(hexlet):
 def test_unificate_url(url, hexlet, default):
     assert hexlet == unificate_url(url, hexlet)
     assert urljoin(url, default) == unificate_url(url, default)
-
-
-def test_save_images():
-    pass
-
-
-def test_save_scripts():
-    pass
-
-
-def test_save_css():
-    pass
-
-
-# use mocks
-
-# def test_download_page(hexletsaved, hexlet, folder='/'):
-#     file_name = parse_name(hexlet)
-#     with TemporaryDirectory(folder) as td:
-#         path = download(hexlet, td)
-#         # path is correct
-#         assert path == f'{td}{file_name}'
-#         with open(path) as html:
-#             page = html.read()
-#             assert page == hexletsaved
