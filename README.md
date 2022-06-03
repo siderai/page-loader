@@ -52,9 +52,8 @@ Python3
 ## Acquired skills:
 1. Web scraping using requests and bs4
 2. Extending pre-built parsers with custom ones
-3. Advanced testing with mocks and stubs
-4. Logging, debugging
-5. Automating operations on linux file system
+3. Logging, debugging
+4. Automating I/O bound operations (linux file system)
 
 
 
