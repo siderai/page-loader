@@ -35,6 +35,8 @@ def download(url: str, content_path: str) -> str:
         raise requests.ConnectionError
     else:
         logging.debug(f"Connection established: {url}")
+    
+    # Names for page and directory are parsed from initial url
     name = parse_name(url, "html")
     path = os.path.join(content_path, name)
 
@@ -48,10 +50,12 @@ def download(url: str, content_path: str) -> str:
         except PermissionError:
             logging.error(
                 "Could not save to a local directory as it "
-                "does not exist and cannot be created: no rights"
+                "does not exist and cannot be created: no rights. "
+                f"Path: {path_for_files}"
             )
             raise PermissionError(
-                "You have no rights to create " "a directory with this path"
+                "You have no rights to create "
+                "a directory at this path"
             )
 
     soup = BeautifulSoup(request.content, "html.parser")
@@ -61,7 +65,7 @@ def download(url: str, content_path: str) -> str:
     for img in img_items:
         img_path = save_image(img, path_for_files, url)
         if img_path:
-            # if file is downloaded, we need to change its path to local
+            # if file is downloaded, we need to change its url to local path
             img_rel_path = content_dir_name + img_path.split(
                 content_dir_name)[1]
             img["src"] = img_rel_path
@@ -84,7 +88,7 @@ def download(url: str, content_path: str) -> str:
                 content_dir_name)[1]
             res["href"] = res_rel_path
 
-    # save page as html locally
+    # save the page as html locally
     with open(path, "w+") as html:
         html.write(soup.prettify())
 
