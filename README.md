@@ -25,6 +25,24 @@ optional arguments:
 In services.py there is a bunch of internal scrapers for images, scripts and css, that download files, provided by html-soup parsing. Also, there are html parsers for file/dir's name generation.
 
 In page_loader.py there is a high-level function "download", which saves html and related assets in specified directory. Running page_loader.py as a script will provide CLI. In case you need a direct access, the whole functionality can easily be imported to your project with "download" as a library function. 
+```
+├── Makefile                   - quick commands for development environment
+├── README.md
+├── page_loader
+│   ├── __init__.py
+│   ├── page_loader.py         - high-level interface, file system operations, html parsing
+│   └── services.py            - bunch of scrapers for images, scripts and css
+├── poetry.lock
+├── pyproject.toml
+├── setup.cfg
+└── tests
+    ├── __init__.py
+    ├── fixtures
+    │   ├── courses_fake.html
+    │   └── courses_updated.html
+    ├── test_page_loader.py   - functional tests (CLI)
+    └── test_services.py      - unit tests
+```
 
 Training project at hexlet.io.
 
